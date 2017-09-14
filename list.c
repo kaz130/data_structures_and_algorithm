@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct element {
+    char data;
+    struct element *next;
+};
+
+struct element *new()
+{
+    return ((struct element *) malloc(sizeof(struct element)));
+}
+
+struct element *create()
+{
+    struct element *p;
+    p = new();
+    p->data = '!';
+    p->next = NULL;
+    return(p);
+}
+
+void insert(struct element *l, int k, char item)
+{
+    struct element *p;
+    if (k > 1) {
+        insert(l->next, k-1, item);
+    } else {
+        p = new();
+        p->data = item;
+        p->next = l->next;
+        l->next = p;
+    }
+}
+
+void delete(struct element *l, int k)
+{
+    struct element *next;
+    if (k > 1) {
+        delete(l->next, k-1);
+    } else {
+        next = l->next;
+        l->next = l->next->next;
+        free(next);
+    }
+}
+
+char access(struct element *l, int k)
+{
+    if (k > 1) {
+        return(access(l->next, k-1));
+    } else {
+        return(l->next->data);
+    }
+}
+
+void reverse(struct element *l)
+{
+    struct element *back, *p, *next;
+    if (l->next == NULL || l->next->next == NULL) return;
+    p = l->next;
+    next = p->next;
+    p->next = NULL;
+    while (next) {
+        back = p;
+        p = next;
+        next = p->next;
+        p->next = back;
+    }
+    l->next = p;
+}
+
+void print(struct element *l)
+{
+    int i;
+    struct element *p;
+    p = l->next;
+    for (i = 0; i < 20; i++) {
+        if (p != NULL) {
+            printf("%c -> ", p->data);
+            p = p->next;
+        } else {
+            printf("NULL\n");
+            return;
+        }
+    }
+    printf("...\n");
+}
+
+int main(void) {
+    struct element *p;
+    p = create(); print(p);
+    insert(p, 1, 'a'); print(p);
+    insert(p, 2, 'b'); print(p);
+    insert(p, 3, 'c'); print(p);
+    reverse(p); print(p);
+    delete(p, 2); print(p);
+    return 0;
+}
+

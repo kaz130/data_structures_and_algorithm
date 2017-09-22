@@ -23,35 +23,38 @@ struct element *create()
 void insert(struct element *l, int k, char item)
 {
     struct element *p;
-    if (k > 1) {
-        insert(l->next, k-1, item);
-    } else {
-        p = new();
-        p->data = item;
-        p->next = l->next;
-        l->next = p;
+    struct element *tmp;
+    tmp = l;
+    for (int i = k; k > 1; k--) {
+        tmp = tmp->next;
     }
+    p = new();
+    p->data = item;
+    p->next = tmp->next;
+    tmp->next = p;
 }
 
 void delete(struct element *l, int k)
 {
     struct element *next;
-    if (k > 1) {
-        delete(l->next, k-1);
-    } else {
-        next = l->next;
-        l->next = l->next->next;
-        free(next);
+    struct element *tmp;
+    tmp = l;
+    for (int i = k; k > 1; k--) {
+        tmp = tmp->next;
     }
+    next = tmp->next;
+    tmp->next = tmp->next->next;
+    free(next);
 }
 
 char access(struct element *l, int k)
 {
-    if (k > 1) {
-        return(access(l->next, k-1));
-    } else {
-        return(l->next->data);
+    struct element *tmp;
+    tmp = l;
+    for (int i = k; k > 1; k--) {
+        tmp = tmp->next;
     }
+    return(tmp->next->data);
 }
 
 void reverse(struct element *l)

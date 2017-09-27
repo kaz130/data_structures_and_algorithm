@@ -25,7 +25,7 @@ void insert(struct element *l, int k, char item)
     struct element *p;
     struct element *tmp;
     tmp = l;
-    for (int i = k; k > 1; k--) {
+    for (int i = 0; i < k - 1; i++) {
         tmp = tmp->next;
     }
     p = new();
@@ -39,7 +39,7 @@ void delete(struct element *l, int k)
     struct element *next;
     struct element *tmp;
     tmp = l;
-    for (int i = k; k > 1; k--) {
+    for (int i = 0; i < k - 1; i++) {
         tmp = tmp->next;
     }
     next = tmp->next;
@@ -51,7 +51,7 @@ char access(struct element *l, int k)
 {
     struct element *tmp;
     tmp = l;
-    for (int i = k; k > 1; k--) {
+    for (int i = 0; i < k - 1; i++) {
         tmp = tmp->next;
     }
     return(tmp->next->data);

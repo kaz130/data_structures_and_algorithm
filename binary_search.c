@@ -51,6 +51,7 @@ void insert(struct vertex *p, int x)
     struct vertex **pp;
     struct vertex *pt;
 
+    if (search1(p, x) != NULL) return;
     pp = search2(p, x);
     pt = newv();
     pt->data = x;
@@ -130,7 +131,7 @@ void printTree(struct vertex *p)
 void printTree1(struct vertex *p, int depth, bool isLeft)
 {
     if (p != NULL) {
-        printf("%*s%d\n", 5 * depth, isLeft ? "L:" : "R:" , p->data);
+        printf("%*s%d\n", 5 * depth + 2, isLeft ? "L:" : "R:" , p->data);
         printTree1(p->l, depth+1, true);
         printTree1(p->r, depth+1, false);
     }

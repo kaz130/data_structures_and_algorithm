@@ -68,26 +68,26 @@ void delete(struct vertex *p, int x)
     pp = search2(p, x);
     p = *pp;
     if (p->l == NULL || p->r == NULL) {
-        if (p->r == NULL) q = p->l;
-        else q = p->r;
-        if (*pp == p) *pp = q;
-        else *pp = q;
+        // 子が0個 or 1個
+        if (p->r == NULL) *pp = p->l;
+        else *pp = p->r;
         free(p);
     } else {
+        // 子が2個
         q = p->r;
         f = q;
         while (q->l != NULL) {
             f = q;
             q = q->l;
         }
-        p->data = q->data;
-        if (q == f) {
-            free(p->r);
-            p->r = q->r;
-        } else {
-            free(f->l);
-            f->l = q->r;
-        }
+        // p: 削除するノード
+        // q: 上に移すノード
+        // f: qの親
+        f->l = q->r;
+        (*pp) = q;
+        q->r = p->r;
+        q->l = p->l;
+        free(p);
     }
 }
 

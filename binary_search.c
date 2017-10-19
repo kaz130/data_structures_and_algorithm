@@ -10,10 +10,10 @@ struct vertex {
 struct vertex *newv();
 struct vertex *create();
 int member(struct vertex *p, int x);
-void insert(struct vertex *p, int x);
-void delete(struct vertex *p, int x);
 struct vertex *search1(struct vertex *p, int x);
 struct vertex **search2(struct vertex *p, int x);
+void insert(struct vertex *p, int x);
+void delete(struct vertex *p, int x);
 void printTree(struct vertex *p);
 void printTree1(struct vertex *p, int depth, bool isLeft);
 
@@ -46,6 +46,37 @@ int member(struct vertex *p, int x)
     return 0;
 }
 
+struct vertex *search1(struct vertex *p, int x)
+{
+    while (p != NULL) {
+        // データ一致
+        if (p->data == x) return p;
+        // データ不一致 左子へ
+        else if (p->data > x) p = p->l;
+        // データ不一致 右子へ
+        else p = p->r;
+    }
+    return NULL;
+}
+
+struct vertex **search2(struct vertex *p, int x)
+{
+    struct vertex **pp = NULL;
+
+    while (p != NULL && p->data != x) {
+        if (p->data > x) {
+            // データ不一致 左子へ
+            pp = &(p->l);
+            p = p->l;
+        } else if (p->data < x) {
+            // データ不一致 右子へ
+            pp = &(p->r);
+            p = p->r;
+        }
+    }
+    return pp;
+}
+
 void insert(struct vertex *p, int x)
 {
     struct vertex **pp;
@@ -53,6 +84,7 @@ void insert(struct vertex *p, int x)
 
     if (search1(p, x) != NULL) return;
     pp = search2(p, x);
+    // 新しいノードを作成
     pt = newv();
     pt->data = x;
     pt->l = pt->r = NULL;
@@ -92,37 +124,6 @@ void delete(struct vertex *p, int x)
     }
 }
 
-struct vertex *search1(struct vertex *p, int x)
-{
-    while (p != NULL) {
-        // データ一致
-        if (p->data == x) return p;
-        // データ不一致 左子へ
-        else if (p->data > x) p = p->l;
-        // データ不一致 右子へ
-        else p = p->r;
-    }
-    return NULL;
-}
-
-struct vertex **search2(struct vertex *p, int x)
-{
-    struct vertex **pp = NULL;
-    while (p != NULL && p->data != x) {
-        // データ不一致 左子へ
-        if (p->data > x) {
-            pp = &(p->l);
-            p = p->l;
-        }
-        // データ不一致 右子へ
-        else if (p->data < x) {
-            pp = &(p->r);
-            p = p->r;
-        }
-    }
-    return pp;
-}
-
 void printTree(struct vertex *p)
 {
     printTree1(p, 0, false);
@@ -143,6 +144,7 @@ int main(void)
     struct vertex *p, *q;
     // テスト用データ
     int a[12] = {18, 7, 22, 5, 11, 8, 9, 15, 22, 21, 31, 25};
+
     // 木を作成
     p = create();
     for (int i = 0; i < 12; i++) {
@@ -153,11 +155,9 @@ int main(void)
     q = search1(p, 15);
     printf("%p\n", q);
     if (q != NULL) printf("%d\n", (*search2(p, 15))->data);
-    // 子が0個のノードを削除
-    delete(p, 25);
-    // 子が1個のノードを削除
+    // ノードを削除
     delete(p, 31);
-    // 子が2個のノードを削除
+    delete(p, 25);
     delete(p, 7);
     printTree(p->r);
     return 0;
